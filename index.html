@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Syrian Olympiad in Artificial Intelligence | أولمبياد الذكاء الاصطناعي السوري</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --soai-blue:#2563eb;--soai-blue-dark:#1e40af; }
+    html { scroll-behavior:smooth; }
+    body { font-family:"Inter","Tajawal",sans-serif; }
+    ::selection { background:#bfdbfe;color:#1e3a8a; }
+    .rtl { direction:rtl; font-family:"Tajawal",sans-serif; }
+    header {
+      background:rgba(224,242,254,0.85);backdrop-filter:blur(8px);
+      transition:background 0.3s, box-shadow 0.3s;
+    }
+    header.header-scrolled {
+      background:rgba(255,255,255,0.92);
+      box-shadow:0 4px 20px rgba(15,23,42,0.08);
+    }
+    .nav-link { color:#1e293b;position:relative;transition:color 0.2s; }
+    .nav-link::after {
+      content:"";position:absolute;left:50%;bottom:0.35rem;width:0;height:2px;
+      background:var(--soai-blue);border-radius:1px;
+      transition:width 0.25s ease, left 0.25s ease;
+    }
+    .nav-link:hover::after,.nav-link-active::after { width:70%;left:15%; }
+    .nav-link:hover,.nav-link-active { color:var(--soai-blue-dark); }
+    .hero-section {
+      position:relative;overflow:hidden;
+      background:linear-gradient(155deg,#dbeafe 0%,#e0f2fe 35%,#f0f9ff 70%,#e0f2fe 100%);
+    }
+    .hero-section::before {
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 80% 50% at 15% 20%,rgba(37,99,235,0.12),transparent),
+        radial-gradient(ellipse 60% 40% at 85% 75%,rgba(14,165,233,0.1),transparent);
+    }
+    .hero-grid {
+      position:absolute;inset:0;pointer-events:none;opacity:0.35;
+      background-image:linear-gradient(rgba(37,99,235,0.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(37,99,235,0.06) 1px,transparent 1px);
+      background-size:48px 48px;
+      mask-image:linear-gradient(to bottom,black 30%,transparent 95%);
+    }
+    .hero-content { position:relative;z-index:1; }
+    .hero-title { animation:heroFade 0.8s ease both; }
+    .hero-subtitle { animation:heroFade 0.8s ease 0.12s both; }
+    .hero-cta { animation:heroFade 0.8s ease 0.24s both; }
+    @keyframes heroFade {
+      from { opacity:0; transform:translateY(16px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .logo-text-ai { color:var(--soai-blue); }
+    .logo-text-olympiad { color:var(--soai-blue-dark); }
+    .btn-primary {
+      background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;
+      transition:transform 0.2s, box-shadow 0.2s;
+      box-shadow:0 4px 14px rgba(37,99,235,0.35);
+    }
+    .btn-primary:hover {
+      background:linear-gradient(135deg,#2563eb,#1d4ed8);
+      box-shadow:0 6px 20px rgba(37,99,235,0.45);
+    }
+    .wave-divider { line-height:0;margin-top:-1px; }
+    .wave-divider svg { display:block;width:100%;height:3rem; }
+    @media(min-width:768px){ .wave-divider svg { height:4rem; } }
+    .section-heading {
+      display:inline-block;position:relative;padding-bottom:0.5rem;
+    }
+    .section-heading::after {
+      content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+      width:3rem;height:4px;
+      background:linear-gradient(90deg,transparent,var(--soai-blue),transparent);
+      border-radius:2px;
+    }
+    .focus-card {
+      transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
+    }
+    .focus-card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 12px 24px rgba(37,99,235,0.1);
+      border-color:#93c5fd;
+    }
+    .reveal {
+      opacity:0;transform:translateY(28px);
+      transition:opacity 0.65s cubic-bezier(0.22,1,0.36,1),
+        transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; }
+    .reveal-delay-2 { transition-delay:0.2s; }
+    .back-to-top {
+      position:fixed;bottom:1.5rem;right:1.5rem;z-index:50;
+      width:2.75rem;height:2.75rem;border-radius:9999px;
+      background:var(--soai-blue);color:white;border:none;cursor:pointer;
+      box-shadow:0 4px 14px rgba(37,99,235,0.4);
+      opacity:0;visibility:hidden;transform:translateY(12px);
+      transition:opacity 0.3s, visibility 0.3s, transform 0.3s, background 0.2s;
+    }
+    .back-to-top.show { opacity:1;visibility:visible;transform:translateY(0); }
+    .back-to-top:hover { background:var(--soai-blue-dark); }
+    body.rtl .back-to-top { right:auto;left:1.5rem; }
+    body.rtl .lang-switcher-container { right:auto!important;left:1rem!important; }
+    #mobile-menu .nav-link { color:#f8fafc; }
+    #mobile-menu .nav-link:hover,#mobile-menu .nav-link-active { color:#fff; }
+    #mobile-menu .nav-link::after { background:#fff; }
+    .mobile-menu { display:none; }
+    @media(max-width:768px){
+      .desktop-menu{display:none;}
+      .mobile-menu-button-container{display:flex;}
+    }
+    .mobile-menu-button-container{display:none;}
+    .lang-switcher {
+      background-color:rgba(255,255,255,0.9);padding:4px;border-radius:9999px;
+      display:flex;box-shadow:0 2px 10px rgba(0,0,0,0.1);backdrop-filter:blur(5px);
+    }
+    .lang-option {
+      padding:4px 12px;border-radius:9999px;cursor:pointer;
+      font-size:14px;font-weight:500;transition:all 0.2s;
+    }
+    .lang-option.active { background-color:white;color:#2563eb;box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+    .lang-switcher-container { position:fixed!important;top:1rem!important;right:1rem!important;z-index:9999!important; }
+    .linkedin-overlay {
+      position:absolute;inset:0;border-radius:9999px;
+      background:rgba(37,99,235,0.75);display:flex;
+      align-items:center;justify-content:center;
+      opacity:0;transition:opacity 0.2s;
+    }
+    .person-img-wrap:hover .linkedin-overlay { opacity:1; }
+    .committee-card {
+      background:white;border:1px solid #e5e7eb;border-radius:0.75rem;
+      padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.06);
+      transition:box-shadow 0.2s, transform 0.2s;height:100%;
+    }
+    .committee-card:hover { box-shadow:0 4px 14px rgba(0,0,0,0.08); transform:translateY(-2px); }
+    .committee-card h3 { font-size:1.25rem;font-weight:700;color:#111827; }
+    .committee-headline {
+      color:#2563eb;font-size:0.875rem;font-weight:500;line-height:1.5;margin-top:0.375rem;
+    }
+    .committee-bio { color:#4b5563;font-size:0.875rem;line-height:1.6;margin-top:0.875rem; }
+    .committee-tags { display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem; }
+    .committee-tag { font-size:0.75rem;font-weight:600;padding:0.25rem 0.75rem;border-radius:9999px; }
+    .committee-tag-blue { background:#dbeafe;color:#1e40af; }
+    .committee-tag-green { background:#d1fae5;color:#047857; }
+    .committee-tag-violet { background:#ede9fe;color:#5b21b6; }
+    .committee-avatar {
+      width:4rem;height:4rem;border-radius:9999px;object-fit:cover;
+      border:2px solid #bfdbfe;margin-bottom:1rem;
+    }
+    /* ── Sponsor tiers ─────────────────────────── */
+    .sponsor-tier { margin-bottom:3.5rem; }
+    .sponsor-tier:last-child { margin-bottom:0; }
+
+    /* tier label */
+    .sponsor-tier-title {
+      text-align:center;font-size:1rem;font-weight:800;
+      letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1.5rem;
+      display:flex;align-items:center;justify-content:center;gap:0.5rem;
+    }
+    .sponsor-tier-title::before,
+    .sponsor-tier-title::after {
+      content:"";flex:1;max-width:6rem;height:2px;border-radius:1px;
+      background:currentColor;opacity:0.25;
+    }
+
+    /* colour per tier */
+    .sponsor-tier-national .sponsor-tier-title { color:#0369a1; }
+    .sponsor-tier-platinum .sponsor-tier-title { color:#7c3aed; }
+    .sponsor-tier-gold     .sponsor-tier-title { color:#b45309; }
+    .sponsor-tier-silver   .sponsor-tier-title { color:#475569; }
+
+    /* row layout */
+    .sponsor-tier-row {
+      display:flex;flex-wrap:wrap;justify-content:center;
+      gap:1.5rem;margin:0 auto;
+    }
+
+    /* card shell — square portrait, fixed size so logo fills it */
+    .sponsor-card {
+      background:white;border-radius:1rem;
+      display:flex;align-items:center;justify-content:center;
+      transition:box-shadow 0.2s, transform 0.2s;
+      overflow:hidden;flex-shrink:0;
+    }
+    .sponsor-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.13); transform:translateY(-4px); }
+
+    /* ── Sponsor cards: unified bg, contain, no cropping ── */
+
+    .sponsor-card {
+      background: #f8fafc;
+      border-radius: 0rem;
+      border: 1.5px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: transform 0.2s, box-shadow 0.2s;
+      flex-shrink: 0;
+    }
+    .sponsor-card:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+
+    /* All logos: fill container without cropping */
+    .sponsor-logo-national,
+    .sponsor-logo-platinum,
+    .sponsor-logo-gold,
+    .sponsor-logo-silver {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+    }
+
+    /* National = Clinlab → square card */
+    .sponsor-tier-national .sponsor-card { width:300px; height:250px; }
+
+    /* Platinum = Syriatel → landscape card */
+    .sponsor-tier-platinum .sponsor-card { width:300px; height:130px; }
+
+    /* Gold → landscape, both same size */
+    .sponsor-tier-gold .sponsor-card     { width:270px; height:120px; }
+
+    /* Silver → square, both same size */
+    .sponsor-tier-silver .sponsor-card   { width:160px; height:160px; }
+
+    @media(min-width:768px){
+      .sponsor-tier-national .sponsor-card { width:500x; height:250px; }
+      .sponsor-tier-platinum .sponsor-card { width:360px; height:135px; }
+      .sponsor-tier-gold     .sponsor-card { width:300px; height:135px; }
+      .sponsor-tier-silver   .sponsor-card { width:190px; height:190px; }
+    }
+      .sponsor-tier-national .sponsor-card  { padding: 0rem; object-fit: cover;}   /* Clinlab */
+.sponsor-tier-platinum .sponsor-card  { padding: 0.3rem 0.1rem; object-fit: cover;} /* Syriatel */
+.sponsor-tier-gold .sponsor-card      { padding: 0.2rem 0.2rem;object-fit: cover; } /* Syrian Forum + البركة */
+.sponsor-tier-silver .sponsor-card    { padding: 0.2rem;object-fit: cover; }       /* BeeOrder + Tecore */
+
+
+
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-700">
+
+<!-- Language Switcher -->
+<div class="lang-switcher-container">
+  <div class="lang-switcher shadow-md">
+    <div id="lang-en" class="lang-option active" onclick="switchLanguage('en')">EN</div>
+    <div id="lang-ar" class="lang-option" onclick="switchLanguage('ar')">AR</div>
+  </div>
+</div>
+
+<!-- Header -->
+<header id="site-header" class="sticky top-0 z-40">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <div class="flex-shrink-0">
+        <a href="#home" class="flex items-center space-x-2">
+          <img class="h-12 w-auto" src="./images/soai_white_logo.jpg" alt="SOAI Logo" />
+        </a>
+      </div>
+      <nav class="hidden md:flex space-x-6 lg:space-x-8 desktop-menu">
+        <a href="#home"                class="nav-link px-3 py-2 rounded-md text-sm font-medium nav-link-active" data-en="Home"                data-ar="الرئيسية"       >Home</a>
+        <a href="#about"               class="nav-link px-3 py-2 rounded-md text-sm font-medium"                 data-en="About"               data-ar="عن الأولمبياد"  >About</a>
+        <a href="#organizers"          class="nav-link px-3 py-2 rounded-md text-sm font-medium"                 data-en="Organizers"          data-ar="المنظمون"       >Organizers</a>
+        <a href="#scientific-committee"class="nav-link px-3 py-2 rounded-md text-sm font-medium"                 data-en="Scientific Committee" data-ar="اللجنة العلمية">Scientific Committee</a>
+        <a href="#ioai"                class="nav-link px-3 py-2 rounded-md text-sm font-medium"                 data-en="About IOAI"          data-ar="عن IOAI"        >About IOAI</a>
+        <a href="#sponsors"            class="nav-link px-3 py-2 rounded-md text-sm font-medium"                 data-en="Sponsors"            data-ar="الرعاة"         >Sponsors</a>
+      </nav>
+      <div class="md:hidden flex items-center mobile-menu-button-container">
+        <button id="mobile-menu-button" type="button" aria-label="Menu" aria-expanded="false" class="inline-flex items-center justify-center p-2 rounded-md text-slate-800 hover:text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <svg id="hamburger-icon" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+          <svg id="close-icon"     class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="mobile-menu" class="md:hidden mobile-menu bg-sky-700">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="#home"                class="nav-link hover:bg-sky-600 block px-3 py-2 rounded-md text-base font-medium nav-link-active" data-en="Home"                data-ar="الرئيسية"       >Home</a>
+      <a href="#about"               class="nav-link hover:bg-sky-600 block px-3 py-2 rounded-md text-base font-medium"                 data-en="About"               data-ar="عن الأولمبياد"  >About</a>
+      <a href="#organizers"          class="nav-link hover:bg-sky-600 block px-3 py-2 rounded-md text-base font-medium"                 data-en="Organizers"          data-ar="المنظمون"       >Organizers</a>
+      <a href="#scientific-committee"class="nav-link hover:bg-sky-600 block px-3 py-2 rounded-md text-base font-medium"                 data-en="Scientific Committee" data-ar="اللجنة العلمية">Scientific Committee</a>
+      <a href="#ioai"                class="nav-link hover:bg-sky-600 block px-3 py-2 rounded-md text-base font-medium"                 data-en="About IOAI"          data-ar="عن IOAI"        >About IOAI</a>
+      <a href="#sponsors"            class="nav-link hover:bg-sky-600 block px-3 py-2 rounded-md text-base font-medium"                 data-en="Sponsors"            data-ar="الرعاة"         >Sponsors</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section id="home" class="hero-section py-20 md:py-32">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-content container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="hero-title text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
+      <span class="block logo-text-olympiad" data-en="Syrian Olympiad"            data-ar="الأولمبياد السوري"       >Syrian Olympiad</span>
+      <span class="block logo-text-ai"       data-en="in Artificial Intelligence" data-ar="في الذكاء الاصطناعي"    >in Artificial Intelligence</span>
+    </h1>
+    <p class="hero-subtitle mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-600"
+      data-en="Empowering Syria's brightest young minds in the field of AI. Innovate, learn, and compete!"
+      data-ar="تمكين ألمع العقول الشابة في سوريا في مجال الذكاء الاصطناعي. ابتكر، تعلّم، وتنافس!">
+      Empowering Syria's brightest young minds in the field of AI. Innovate, learn, and compete!
+    </p>
+    <div class="hero-cta mt-10 flex flex-wrap justify-center gap-4">
+      <a href="#about" class="btn-primary px-8 py-3 rounded-lg text-base font-medium hover:scale-105"
+         data-en="Learn More" data-ar="المزيد">Learn More</a>
+      <a href="#" class="bg-white/90 backdrop-blur text-sky-700 px-8 py-3 rounded-lg text-base font-medium shadow-md hover:shadow-lg hover:bg-white hover:scale-105 border border-sky-300 transition-all duration-200">
+        <span class="lang-en">Register Now <span class="text-red-500 font-bold">(Coming Soon!)</span></span>
+        <span class="lang-ar hidden">سجّل الآن <span class="text-red-500 font-bold">(قريباً!)</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="wave-divider" aria-hidden="true">
+  <svg viewBox="0 0 1440 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#ffffff" d="M0,32L48,37.3C96,43,192,53,288,53.3C384,53,480,43,576,42.7C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,64L0,64Z"/>
+  </svg>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════════ -->
+<section id="about" class="py-16 md:py-24 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="reveal text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <span class="section-heading" data-en="About the Competition" data-ar="عن المسابقة">About the Competition</span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto"
+        data-en="Discover the mission, vision, and impact of the Syrian Olympiad in Artificial Intelligence"
+        data-ar="اكتشف مهمة ورؤية وتأثير الأولمبياد السوري في الذكاء الاصطناعي">
+        Discover the mission, vision, and impact of the Syrian Olympiad in Artificial Intelligence
+      </p>
+    </div>
+    <div class="reveal max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="prose prose-lg text-gray-700">
+          <p class="text-lg leading-relaxed"
+            data-en="The Syrian Olympiad in Artificial Intelligence (SOAI) is a national competition that challenges and inspires the next generation of Syrian AI innovators."
+            data-ar="الأولمبياد السوري في الذكاء الاصطناعي (SOAI) هو مسابقة وطنية تتحدى وتلهم الجيل القادم من مبتكري الذكاء الاصطناعي السوريين.">
+            The <span class="font-semibold text-blue-600">Syrian Olympiad in Artificial Intelligence (SOAI)</span> is a national competition that challenges and inspires the next generation of Syrian AI innovators.
+          </p>
+          <p class="text-lg leading-relaxed mt-4"
+            data-en="Designed for exceptional young Syrian minds, SOAI provides a unique platform to showcase talent, solve real-world problems, and build a thriving AI community in Syria."
+            data-ar="صمم الأولمبياد للعقول الشابة السورية الاستثنائية ليقدم منصة فريدة لعرض المواهب وحل المشكلات الواقعية وبناء مجتمع ذكاء اصطناعي مزدهر في سوريا.">
+            Designed for exceptional young Syrian minds, SOAI provides a unique platform to showcase talent, solve real-world problems, and build a thriving AI community in Syria.
+          </p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-8 border border-blue-100 shadow-sm">
+          <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <span data-en="Key Objectives" data-ar="الأهداف الرئيسية">Key Objectives</span>
+          </h3>
+          <ul class="space-y-4">
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700" data-en="Promote AI education and research among Syrian pre-university students" data-ar="تعزيز التعليم والبحث في الذكاء الاصطناعي بين طلاب ما قبل الجامعة في سوريا">Promote AI education and research among Syrian pre-university students</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700" data-en="Identify and nurture exceptional Syrian talent in artificial intelligence" data-ar="تحديد ورعاية المواهب السورية الاستثنائية في مجال الذكاء الاصطناعي">Identify and nurture exceptional Syrian talent in artificial intelligence</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700" data-en="Foster collaboration between Syrian students and global AI experts" data-ar="تعزيز التعاون بين الطلاب السوريين وخبراء الذكاء الاصطناعي العالميين">Foster collaboration between Syrian students and global AI experts</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-gray-700" data-en="Explore ethical implications and responsible development of AI" data-ar="استكشاف الآثار الأخلاقية والتطوير المسؤول للذكاء الاصطناعي">Explore ethical implications and responsible development of AI</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-16 bg-gray-50 rounded-xl p-8 md:p-10 border border-gray-200">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6" data-en="Competition Focus Areas" data-ar="مجالات التركيز في المسابقة">Competition Focus Areas</h3>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="focus-card bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="text-blue-600 mb-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+            <h4 class="font-semibold text-lg mb-2 text-gray-800" data-en="Machine Learning"  data-ar="تعلم الآلة">Machine Learning</h4>
+            <p  class="text-gray-600"                               data-en="Algorithms, neural networks, and predictive modeling challenges" data-ar="تحديات الخوارزميات والشبكات العصبية والنمذجة التنبؤية">Algorithms, neural networks, and predictive modeling challenges</p>
+          </div>
+          <div class="focus-card bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="text-blue-600 mb-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg></div>
+            <h4 class="font-semibold text-lg mb-2 text-gray-800" data-en="Neural Networks"   data-ar="الشبكات العصبية">Neural Networks</h4>
+            <p  class="text-gray-600"                               data-en="Deep learning architectures and training methodologies" data-ar="هندسة التعلم العميق ومنهجيات التدريب">Deep learning architectures and training methodologies</p>
+          </div>
+          <div class="focus-card bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="text-blue-600 mb-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+            <h4 class="font-semibold text-lg mb-2 text-gray-800" data-en="NLP"               data-ar="معالجة اللغات الطبيعية">NLP</h4>
+            <p  class="text-gray-600"                               data-en="Language processing, generation, and understanding tasks" data-ar="مهام معالجة اللغة وتوليدها وفهمها">Language processing, generation, and understanding tasks</p>
+          </div>
+          <div class="focus-card bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div class="text-blue-600 mb-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg></div>
+            <h4 class="font-semibold text-lg mb-2 text-gray-800" data-en="Computer Vision"  data-ar="رؤية الحاسوب">Computer Vision</h4>
+            <p  class="text-gray-600"                               data-en="Image recognition, processing, and analysis problems" data-ar="مشاكل التعرف على الصور ومعالجتها وتحليلها">Image recognition, processing, and analysis problems</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SOAI 2026 — ORGANIZERS (CURRENT)
+════════════════════════════════════════════ -->
+<section id="organizers" class="py-16 md:py-24 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="reveal text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <span class="section-heading" data-en="Organizing Committee" data-ar="اللجنة المنظمة">Organizing Committee</span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto"
+        data-en="The team behind the scenes making SOAI possible"
+        data-ar="الفريق الذي يعمل خلف الكواليس لتحقيق أولمبياد SOAI">
+        The team behind the scenes making SOAI possible
+      </p>
+    </div>
+    <div class="reveal reveal-delay-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+      <!-- Ahmad Hindy -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all text-center">
+        <div class="relative w-32 h-32 mx-auto mb-4 person-img-wrap">
+          <a href="https://www.linkedin.com/in/ahmed-hindi1" target="_blank" rel="noopener">
+            <img src="https://placehold.co/320x320/E0F2FE/003366?text=AH" alt="Ahmad Hindy"
+              class="w-full h-full rounded-full object-cover border-4 border-blue-100 shadow-md" />
+            <div class="linkedin-overlay">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </div>
+          </a>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800" data-en="Ahmad Hindy" data-ar="أحمد حندي">Ahmad Hindy</h3>
+        <p class="text-blue-600 font-medium" data-en="Head of Organizing Team" data-ar="رئيس فريق التنظيم">Head of Organizing Team</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SOAI 2026 — SCIENTIFIC COMMITTEE (CURRENT)
+════════════════════════════════════════════ -->
+<section id="scientific-committee" class="py-16 md:py-24 bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="reveal text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <span class="section-heading" data-en="Scientific Committee" data-ar="اللجنة العلمية">Scientific Committee</span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto"
+        data-en="World-renowned experts shaping the academic direction of SOAI"
+        data-ar="خبراء عالميون يشكلون الاتجاه الأكاديمي للأولمبياد السوري في الذكاء الاصطناعي">
+        World-renowned experts shaping the academic direction of SOAI
+      </p>
+    </div>
+    <div class="reveal reveal-delay-1 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
+      <article class="committee-card">
+        <a href="https://www.linkedin.com/in/nazirnayal" target="_blank" rel="noopener noreferrer" class="person-img-wrap relative inline-block">
+          <img src="./images/nazer_nayal.jpg" alt="Nazir Nayal" class="committee-avatar" />
+          <div class="linkedin-overlay rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></div>
+        </a>
+        <h3 data-en="Nazir Nayal" data-ar="نذير نيال">Nazir Nayal</h3>
+        <p class="committee-headline"
+          data-en="PhD Student at Saarland University | Doctoral Researcher at MPI-INF"
+          data-ar="طالب دكتوراه في جامعة Saarland | باحث دكتوراه في معهد ماكس بلانك للمعلوماتية">
+          PhD Student at Saarland University | Doctoral Researcher at MPI-INF
+        </p>
+        <p class="committee-bio"
+          data-en="Doctoral researcher in the Geometric Representation Learning group at MPI-INF, working on diffusion-based generative models, computer vision, and open-world segmentation. Former MSc and research fellow at KUIS AI, Koç University."
+          data-ar="باحث دكتوراه في مجموعة التعلم الهندسي التمثيلي في MPI-INF، يعمل على النماذج التوليدية القائمة على الانتشار ورؤية الحاسوب وتقسيم العالم المفتوح. حاصل على ماجستير وباحث سابق في مركز KUIS AI بجامعة كوتش.">
+          Doctoral researcher in the Geometric Representation Learning group at MPI-INF, working on diffusion-based generative models, computer vision, and open-world segmentation. Former MSc and research fellow at KUIS AI, Koç University.
+        </p>
+        <div class="committee-tags">
+          <span class="committee-tag committee-tag-blue" data-en="Computer Vision" data-ar="رؤية الحاسوب">Computer Vision</span>
+          <span class="committee-tag committee-tag-green" data-en="Machine Learning" data-ar="تعلم الآلة">Machine Learning</span>
+          <span class="committee-tag committee-tag-violet" data-en="Generative Models" data-ar="النماذج التوليدية">Generative Models</span>
+        </div>
+      </article>
+
+      <article class="committee-card">
+        <a href="https://www.linkedin.com/in/eyad-alshami" target="_blank" rel="noopener noreferrer" class="person-img-wrap relative inline-block">
+          <img src="./images/eyad_alshami.jpg" alt="Eyad Alshami" class="committee-avatar" />
+          <div class="linkedin-overlay rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></div>
+        </a>
+        <h3 data-en="Eyad Alshami" data-ar="إياد الشامي">Eyad Alshami</h3>
+        <p class="committee-headline"
+          data-en="PhD Candidate at MPI-INF | Research at CISPA Helmholtz Center"
+          data-ar="مرشح دكتوراه في MPI-INF | باحث في مركز CISPA Helmholtz">
+          PhD Candidate at MPI-INF | Research at CISPA Helmholtz Center
+        </p>
+        <p class="committee-bio"
+          data-en="PhD candidate in neuroexplicit models, focused on explainable and interpretable deep learning for computer vision. M.Sc. in Data Science and AI from Saarland University; published work on self-supervised masking to help models prioritize genuine features (ICCV 2025)."
+          data-ar="مرشح دكتوراه في النماذج العصبية الصريحة، يركز على التعلم العميق القابل للتفسير لرؤية الحاسوب. ماجستير في علوم البيانات والذكاء الاصطناعي من جامعة Saarland؛ أبحاث منشورة حول التعلم الذاتي الإشرافي لتوجيه النماذج نحو السمات الحقيقية (ICCV 2025).">
+          PhD candidate in neuroexplicit models, focused on explainable and interpretable deep learning for computer vision. M.Sc. in Data Science and AI from Saarland University; published work on self-supervised masking to help models prioritize genuine features (ICCV 2025).
+        </p>
+        <div class="committee-tags">
+          <span class="committee-tag committee-tag-blue" data-en="Explainable AI" data-ar="ذكاء اصطناعي قابل للتفسير">Explainable AI</span>
+          <span class="committee-tag committee-tag-green" data-en="Deep Learning" data-ar="التعلم العميق">Deep Learning</span>
+          <span class="committee-tag committee-tag-violet" data-en="Computer Vision" data-ar="رؤية الحاسوب">Computer Vision</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     IOAI SECTION
+════════════════════════════════════════════ -->
+<section id="ioai" class="py-16 md:py-24 bg-slate-100">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="reveal text-center mb-12 md:mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <span class="section-heading" data-en="About IOAI" data-ar="عن الأولمبياد الدولي">About IOAI</span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto"
+        data-en="The International Olympiad in Artificial Intelligence — the global stage SOAI prepares you for"
+        data-ar="الأولمبياد الدولي في الذكاء الاصطناعي — المنصة العالمية التي يُعدّك لها SOAI">
+        The International Olympiad in Artificial Intelligence — the global stage SOAI prepares you for
+      </p>
+    </div>
+    <div class="reveal reveal-delay-1 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
+      <div class="order-2 md:order-1">
+        <p class="text-lg leading-relaxed text-gray-700"
+          data-en="The International Olympiad in Artificial Intelligence (IOAI) is a premier global competition for high school students, aiming to cultivate both a strong theoretical foundation and hands-on expertise in Artificial Intelligence."
+          data-ar="الأولمبياد الدولي في الذكاء الاصطناعي (IOAI) هو مسابقة عالمية رائدة لطلاب المدارس الثانوية، يهدف إلى بناء أساس نظري متين وخبرة عملية في مجال الذكاء الاصطناعي.">
+          The International Olympiad in Artificial Intelligence (IOAI) is a premier global competition for high school students, aiming to cultivate both a strong theoretical foundation and hands-on expertise in Artificial Intelligence.
+        </p>
+        <p class="text-lg leading-relaxed text-gray-700 mt-4"
+          data-en="Each year, talented young minds from around the world come together to compete, collaborate, and explore the frontiers of AI. The Syrian Olympiad in Artificial Intelligence (SOAI) is Syria's national pathway to discover exceptional students and prepare them to represent the country on this international stage."
+          data-ar="يجمع الأولمبياد كل عام ألمع العقول الشابة من أنحاء العالم للتنافس والتعاون واستكشاف آفاق الذكاء الاصطناعي. يمثل الأولمبياد السوري في الذكاء الاصطناعي (SOAI) المسار الوطني لاكتشاف الطلاب المتميزين والتحضير لتمثيل سوريا على الساحة الدولية.">
+          Each year, talented young minds from around the world come together to compete, collaborate, and explore the frontiers of AI. The Syrian Olympiad in Artificial Intelligence (SOAI) is Syria's national pathway to discover exceptional students and prepare them to represent the country on this international stage.
+        </p>
+        <p class="text-lg leading-relaxed text-gray-700 mt-4"
+          data-en="IOAI 2026 will be held in Kazakhstan. Registration is now open on the official website."
+          data-ar="يُقام IOAI 2026 في كازاخستان. التسجيل مفتوح الآن عبر الموقع الرسمي.">
+          IOAI 2026 will be held in Kazakhstan. Registration is now open on the official website.
+        </p>
+        <div class="mt-8">
+          <a href="https://ioai-official.org/registration-2026/"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="btn-primary inline-flex items-center gap-2 px-8 py-3 rounded-lg text-base font-medium shadow-md hover:shadow-lg transform hover:scale-105">
+            <span data-en="IOAI 2026 Registration" data-ar="تسجيل IOAI 2026">IOAI 2026 Registration</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="order-1 md:order-2">
+        <div class="bg-blue-50 rounded-2xl p-6 sm:p-8 border border-blue-100 shadow-sm overflow-hidden">
+          <svg class="w-full h-auto max-h-80 mx-auto" viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI learning illustration">
+            <rect width="400" height="320" rx="16" fill="#E0F2FE"/>
+            <circle cx="200" cy="95" r="52" fill="#93C5FD"/>
+            <rect x="168" y="72" width="64" height="8" rx="4" fill="#3B82F6" opacity="0.5"/>
+            <rect x="158" y="88" width="84" height="6" rx="3" fill="#3B82F6" opacity="0.35"/>
+            <rect x="148" y="102" width="104" height="6" rx="3" fill="#3B82F6" opacity="0.35"/>
+            <circle cx="182" cy="92" r="6" fill="#1E40AF"/>
+            <circle cx="218" cy="92" r="6" fill="#1E40AF"/>
+            <path d="M188 108 Q200 118 212 108" stroke="#1E40AF" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <rect x="172" y="145" width="56" height="70" rx="10" fill="#60A5FA"/>
+            <rect x="148" y="155" width="28" height="50" rx="8" fill="#3B82F6" transform="rotate(-12 148 155)"/>
+            <rect x="224" y="155" width="28" height="50" rx="8" fill="#3B82F6" transform="rotate(12 252 155)"/>
+            <rect x="155" y="210" width="90" height="12" rx="6" fill="#2563EB"/>
+            <path d="M130 240 L200 275 L270 240 L200 205 Z" fill="#BFDBFE" stroke="#3B82F6" stroke-width="2"/>
+            <path d="M155 240 L200 260 L245 240" stroke="#2563EB" stroke-width="2" fill="none"/>
+            <line x1="200" y1="205" x2="200" y2="240" stroke="#3B82F6" stroke-width="2"/>
+            <rect x="175" y="218" width="50" height="6" rx="2" fill="#93C5FD"/>
+            <rect x="168" y="228" width="64" height="5" rx="2" fill="#93C5FD" opacity="0.7"/>
+            <text x="200" y="305" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#1E40AF">IOAI</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SPONSORS
+════════════════════════════════════════════ -->
+<section id="sponsors" class="py-16 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="reveal text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <span class="section-heading" data-en="Our Sponsors" data-ar="رعاة الأولمبياد">Our Sponsors</span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto"
+        data-en="We're grateful for the support of our sponsors who make SOAI possible"
+        data-ar="نحن ممتنون لدعم رعاتنا الذين يجعلون أولمبياد SOAI ممكناً">
+        We're grateful for the support of our sponsors who make SOAI possible
+      </p>
+    </div>
+
+    <!-- National Sponsor -->
+    <div class="reveal sponsor-tier sponsor-tier-national">
+      <h3 class="sponsor-tier-title" data-en="National Sponsor" data-ar="الراعي الوطني">National Sponsor</h3>
+      <div class="sponsor-tier-row">
+        <div class="sponsor-card">
+          <img src="./images/Clinlab_logo.jpg" alt="Clinlab.AI" class="sponsor-logo-national" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Platinum Sponsor -->
+    <div class="reveal reveal-delay-1 sponsor-tier sponsor-tier-platinum">
+      <h3 class="sponsor-tier-title" data-en="Platinum Sponsor" data-ar="الراعي البلاتيني">Platinum Sponsor</h3>
+      <div class="sponsor-tier-row">
+        <div class="sponsor-card">
+          <img src="./images/Syriatel_logo.jpg" alt="Syriatel" class="sponsor-logo-platinum" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Gold Sponsors -->
+    <div class="reveal reveal-delay-1 sponsor-tier sponsor-tier-gold">
+      <h3 class="sponsor-tier-title" data-en="Gold Sponsors" data-ar="الرعاة الذهبيون">Gold Sponsors</h3>
+      <div class="sponsor-tier-row">
+        <div class="sponsor-card">
+          <img src="./images/SyrianForum_logo.jpg" alt="Syrian Forum" class="sponsor-logo-gold" />
+        </div>
+        <div class="sponsor-card">
+          <img src="./images/BankBarakeh_logo.jpg" alt="Barakeh Bank" class="sponsor-logo-gold" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Silver Sponsors -->
+    <div class="reveal reveal-delay-2 sponsor-tier sponsor-tier-silver">
+      <h3 class="sponsor-tier-title" data-en="Silver Sponsors" data-ar="الرعاة الفضيون">Silver Sponsors</h3>
+      <div class="sponsor-tier-row">
+        <div class="sponsor-card">
+          <img src="./images/BeeORDER_logo.png" alt="BeeOrder" class="sponsor-logo-silver" />
+        </div>
+        <div class="sponsor-card">
+          <img src="./images/Tecore_logo.jpg" alt="Tecore Telecom" class="sponsor-logo-silver" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="bg-gray-900 text-gray-300 pt-16 pb-8">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div>
+        <h3 class="text-lg font-bold text-white mb-4">SOAI</h3>
+        <p class="text-sm text-gray-400"
+          data-en="Fostering the next generation of Syrian AI innovators through competition, education, and collaboration."
+          data-ar="تنمية الجيل القادم من مبتكري الذكاء الاصطناعي السوريين من خلال المنافسة والتعليم والتعاون.">
+          Fostering the next generation of Syrian AI innovators through competition, education, and collaboration.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-white mb-4" data-en="Quick Links" data-ar="روابط سريعة">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="#home"                 class="text-sm text-gray-400 hover:text-blue-500 transition" data-en="Home"                 data-ar="الرئيسية"        >Home</a></li>
+          <li><a href="#about"                class="text-sm text-gray-400 hover:text-blue-500 transition" data-en="About"                data-ar="عن الأولمبياد"   >About</a></li>
+          <li><a href="#organizers"           class="text-sm text-gray-400 hover:text-blue-500 transition" data-en="Organizers"           data-ar="المنظمون"        >Organizers</a></li>
+          <li><a href="#scientific-committee" class="text-sm text-gray-400 hover:text-blue-500 transition" data-en="Scientific Committee" data-ar="اللجنة العلمية"  >Scientific Committee</a></li>
+          <li><a href="#ioai"                class="text-sm text-gray-400 hover:text-blue-500 transition" data-en="About IOAI"           data-ar="عن IOAI"         >About IOAI</a></li>
+          <li><a href="#sponsors"            class="text-sm text-gray-400 hover:text-blue-500 transition" data-en="Sponsors"             data-ar="الرعاة"          >Sponsors</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-white mb-4" data-en="Contact Us" data-ar="اتصل بنا">Contact Us</h3>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li class="flex items-start gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-0.5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <a href="mailto:ahmadhndy112@gmail.com" class="hover:text-blue-500 transition">ahmadhndy112@gmail.com</a>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-0.5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <a href="tel:+963951509407" class="hover:text-blue-500 transition">+963 951 509 407</a>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-0.5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span data-en="Syria, Damascus" data-ar="سوريا، دمشق">Syria, Damascus</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-gray-500">
+      © <span id="currentYear"></span>
+      <span data-en=" Syrian Olympiad in Artificial Intelligence. All rights reserved." data-ar=" الأولمبياد السوري في الذكاء الاصطناعي. جميع الحقوق محفوظة."> Syrian Olympiad in Artificial Intelligence. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" title="Back to top">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+  </svg>
+</button>
+
+<script>
+  // Mobile Menu
+  const menuButton = document.getElementById("mobile-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const hamburgerIcon = document.getElementById("hamburger-icon");
+  const closeIcon = document.getElementById("close-icon");
+  menuButton.addEventListener("click", () => {
+    const expanded = menuButton.getAttribute("aria-expanded") === "true";
+    menuButton.setAttribute("aria-expanded", !expanded);
+    mobileMenu.style.display = expanded ? "none" : "block";
+    hamburgerIcon.classList.toggle("hidden");
+    closeIcon.classList.toggle("hidden");
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener("click", function(e) {
+      e.preventDefault();
+      const el = document.querySelector(this.getAttribute("href"));
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        if (mobileMenu.style.display === "block") menuButton.click();
+      }
+    });
+  });
+
+  // Current year
+  document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+  // Active nav
+  function setActiveLink(links) {
+    links.forEach(link => {
+      link.addEventListener("click", function() {
+        links.forEach(l => l.classList.remove("nav-link-active"));
+        this.classList.add("nav-link-active");
+      });
+    });
+  }
+  setActiveLink(document.querySelectorAll("nav a"));
+  setActiveLink(document.querySelectorAll("#mobile-menu a"));
+
+  // Language switcher
+  function switchLanguage(lang) {
+    document.querySelectorAll(".lang-option").forEach(el => el.classList.remove("active"));
+    document.getElementById("lang-" + lang).classList.add("active");
+    document.querySelectorAll("[data-en],[data-ar]").forEach(el => {
+      if (lang === "en" && el.dataset.en) el.textContent = el.dataset.en;
+      else if (lang === "ar" && el.dataset.ar) el.textContent = el.dataset.ar;
+    });
+    document.querySelectorAll(".lang-en").forEach(el => el.classList.toggle("hidden", lang !== "en"));
+    document.querySelectorAll(".lang-ar").forEach(el => el.classList.toggle("hidden", lang !== "ar"));
+    document.body.classList.toggle("rtl", lang === "ar");
+  }
+
+  window.onload = () => switchLanguage("en");
+
+  const siteHeader = document.getElementById("site-header");
+  window.addEventListener("scroll", () => {
+    siteHeader.classList.toggle("header-scrolled", window.scrollY > 24);
+  }, { passive: true });
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+  const backToTop = document.getElementById("back-to-top");
+  window.addEventListener("scroll", () => {
+    backToTop.classList.toggle("show", window.scrollY > 400);
+  }, { passive: true });
+  backToTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  const sections = document.querySelectorAll("main section[id]");
+  const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.getAttribute("id");
+      navLinks.forEach((link) => {
+        link.classList.toggle("nav-link-active", link.getAttribute("href") === "#" + id);
+      });
+    });
+  }, { threshold: 0.35, rootMargin: "-20% 0px -55% 0px" });
+  sections.forEach((section) => sectionObserver.observe(section));
+</script>
+</body>
+</html>
